@@ -2,3 +2,4 @@ baseURL = 'https://the8loop.github.io/'
 languageCode = 'en-us'
 title = 'My New Hugo Site'
 publishdir = '/docs'
+theme = ['XMin']
