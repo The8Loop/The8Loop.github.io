@@ -2,10 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://the8loop.github.io/note/another-note/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://the8loop.github.io/categories/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/categories/example/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/note/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/tags/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/tutorial/</loc>
+    <lastmod>2017-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/note/a-quick-note/</loc>
+    <lastmod>2017-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/post/2016-02-14-hello-markdown/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/blogdown/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/categories/hugo/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/markdown/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/mathjax/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/pandoc/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/post/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/tags/rstudio/</loc>
+    <lastmod>2016-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/post/2015-07-23-lorem-ipsum/</loc>
+    <lastmod>2015-07-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/about/</loc>
   </url>
 </urlset>
