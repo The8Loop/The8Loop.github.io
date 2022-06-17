@@ -4,9 +4,16 @@ title: Home
 
 [<img src="https://simpleicons.org/icons/github.svg" style="max-width:15%;min-width:40px;float:right;" alt="Github repo" />](https://github.com/yihui/hugo-xmin)
 
-# HUGO XMIN
+# DevBlog
 
-## _Keep it simple, but not simpler_
+## Sites
+[council-of-yggdrasil.company](https://council-of-yggdrasil.company/home)
+
+[honeybeeandfriends.buzz](https://honeybeeandfriends.buzz/)
+
+## Posts
+
+<!-- ## _Keep it simple, but not simpler_
 
 **XMin** is a Hugo theme written by [Yihui Xie](https://yihui.org) in about four hours: half an hour was spent on the Hugo templates, and 3.5 hours were spent on styling. The main motivation for writing this theme was to provide a really minimal example to beginners of Hugo templates. This XMin theme contains about 130 lines of code in total, including the code in HTML templates and CSS (also counting empty lines).
 
@@ -35,4 +42,4 @@ Although it is a minimal theme, it is actually fully functional. It supports pag
 
 `$${\sqrt {n}}\left(\left({\frac {1}{n}}\sum _{i=1}^{n}X_{i}\right)-\mu \right)\ {\xrightarrow {d}}\ N\left(0,\sigma ^{2}\right)$$`
 
-All pages not under the root directory of the website are listed below. You can also visit the list page of a single section, e.g., [posts](/post/), or [notes](/note/). See the [About](/about/) page for the usage of this theme.
+All pages not under the root directory of the website are listed below. You can also visit the list page of a single section, e.g., [posts](/post/), or [notes](/note/). See the [About](/about/) page for the usage of this theme. -->
