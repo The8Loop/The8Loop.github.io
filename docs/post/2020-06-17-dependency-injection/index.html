@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dependency Injection | My New Hugo Site</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Dependency Injection</span></h1>
+<h2 class="author">Eric Luper</h2>
+<h2 class="date">2022/06/17</h2>
+</div>
+
+<main>
+<h1 id="a-brief-on-dependency-injection">A Brief on Dependency Injection</h1>
+<p>Dependency Injection, also known as Inversion of Control, is a design pattern used to loosely couple dependent objects. It makes the fifth principle of the SOLID design principles.</p>
+<p>SOLID:</p>
+<ul>
+<li>S : Single-responsiblity Principle</li>
+<li>O : Open-closed Principle</li>
+<li>L : Liskov Substitution Principle</li>
+<li>I : Interface Segregation Principle</li>
+<li>D : Dependency Inversion Principle</li>
+</ul>
+<p>Considering web development and the practice of dependency injection when handling objects making http requests, an example of the code simplification of dependency injection can be given by considering entities with mail services.</p>
+<p>Different entities may be defined with the ability to send or recieve mail to or from some outside source. We may have something large and complicated, like a business, with the ability to send and recieve mail, or define individual people or households. We could define the logic for handling and recieving mail within each entitiy.</p>
+<ul>
+<li>Business
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>Household
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>Person
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+</ul>
+<p>This is duplicative, and logistics is not trivial. The whole process of mail delivery will have to be described for each entity. If a change is made (maybe persons and households have upgraded from carrier pidgeons to vehicle delivery), it will have to be made for multiple entities. One solution may be inheritance, however the aim is loose coupling and reuse. Realistically, persons and households, and maybe even businesses, do not really care what is involved in the process of delivery. Just that things are delivered. The dependency injection solution would be to create a service. A mail delivery service.</p>
+<ul>
+<li>
+<p>Mail Delivery Service</p>
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>
+<p>Business</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+<li>
+<p>Household</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+<li>
+<p>Person</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+</ul>
+<p>All an entity needs to care about is its address or maybe address it wants to send something to, and what it wants to send or recieve. All concerns (playing into seperation of concerns here) of the process of delivery belong to the mail service.</p>
+<h1 id="dependency-injection-in-angular">Dependency Injection in Angular</h1>
+<p>For the free company website <a href="https://council-of-yggdrasil.company/home">council-of-yggdrasil.company</a>, the homepage contains a section that displays FFXIV news and maintenaince information using the Lodestone API. The model of the desired json response is defined in a lodestone.interface.ts.</p>
+<h2 id="lodestoneinterfacets">lodestone.interface.ts</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">LodestoneTopic</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">time</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">image</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">description</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Companion</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">title</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">start</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">end</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">current</span>: <span style="color:#66d9ef">boolean</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">LodestoneMaintenance</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">companion</span>: <span style="color:#66d9ef">Companion</span>[];
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>A service dependent on this model is created to provide methods for making http requests. This is done in lodestone.service.ts. Notice that this service is further dependent on HttpClient. Dependency injection allows the service to focus cleanly on just defining Get methods.</p>
+<h2 id="lodestoneservicets">lodestone.service.ts</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">HttpClient</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;@angular/common/http&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;@angular/core&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;rxjs&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">LodestoneMaintenance</span>, <span style="color:#a6e22e">LodestoneTopic</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;../model/lodestone.interface&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">environment</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;src/environments/environment&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@Injectable</span>({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">providedIn</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;root&#39;</span>
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LodestoneService</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">http</span>: <span style="color:#66d9ef">HttpClient</span>) { }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   * news/topics Get request that retrieves a list of current topics.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   * @returns An observable of topics.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">getTopics</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Observable</span>&lt;<span style="color:#f92672">LodestoneTopic</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">http</span>.<span style="color:#66d9ef">get</span>&lt;<span style="color:#f92672">LodestoneTopic</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">environment</span>.<span style="color:#a6e22e">lodestoneUrl</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/topics`</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   * news/maintenance/current Get request that retrieves a list of current topics.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   * @returns An observable of current maintenance.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">   */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">getMaintenance</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Observable</span>&lt;<span style="color:#f92672">LodestoneMaintenance</span>&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">http</span>.<span style="color:#66d9ef">get</span>&lt;<span style="color:#f92672">LodestoneMaintenance</span>&gt;(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">environment</span>.<span style="color:#a6e22e">lodestoneUrl</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/maintenance/current`</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The Home Component injects the lodestone dependency, allowing it to make requests for Lodestone information. Should other components need to make requests, this dependency could be injected to them as well. Should changes need to be made, such as the endpoint, this can be done in the single service itself. Should the json response be changed, just the model needs to be updated. This is the advantage of seperation of concerns.</p>
+<h2 id="homecomponentts">home.component.ts</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Component</span>, <span style="color:#a6e22e">OnInit</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;@angular/core&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">map</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;rxjs&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">LodestoneMaintenance</span>, <span style="color:#a6e22e">LodestoneTopic</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;src/app/model/lodestone.interface&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">LodestoneService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;src/app/services/lodestone.service&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@Component</span>({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">selector</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;coy-home&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">templateUrl</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;./home.component.html&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">styleUrls</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;./home.component.scss&#39;</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HomeComponent</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">OnInit</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">lodestoneTopics</span>: <span style="color:#66d9ef">LodestoneTopic</span>[] <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">lodestoneMaintenance</span>: <span style="color:#66d9ef">LodestoneMaintenance</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">companion</span><span style="color:#f92672">:</span> []
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">lodestoneService</span>: <span style="color:#66d9ef">LodestoneService</span>) { }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ngOnInit</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lodestoneService</span>.<span style="color:#a6e22e">getTopics</span>().<span style="color:#a6e22e">pipe</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">e</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">e</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">e</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">time</span> <span style="color:#f92672">=</span> (<span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">time</span>)).<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">e</span>;
+</span></span><span style="display:flex;"><span>      }))
+</span></span><span style="display:flex;"><span>      .<span style="color:#a6e22e">subscribe</span>(<span style="color:#a6e22e">lodestoneTopics</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lodestoneTopics</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lodestoneTopics</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lodestoneService</span>.<span style="color:#a6e22e">getMaintenance</span>().<span style="color:#a6e22e">pipe</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">e</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">companion</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">start</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">companion</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">start</span>).<span style="color:#a6e22e">toString</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">companion</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">end</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">companion</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">end</span>).<span style="color:#a6e22e">toString</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">e</span>;
+</span></span><span style="display:flex;"><span>      })
+</span></span><span style="display:flex;"><span>    ).<span style="color:#a6e22e">subscribe</span>(<span style="color:#a6e22e">lodestoneMaintenance</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lodestoneMaintenance</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lodestoneMaintenance</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+</main>
+
+  <footer>
+  
+  
+  </footer>
+  </body>
+</html>
+
