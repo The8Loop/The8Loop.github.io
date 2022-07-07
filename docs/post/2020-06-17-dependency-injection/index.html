@@ -81,7 +81,85 @@
 </li>
 </ul>
 <p>All an entity needs to care about is its address or maybe address it wants to send something to, and what it wants to send or recieve. All concerns (playing into seperation of concerns here) of the process of delivery belong to the mail service.</p>
-<h1 id="dependency-injection-in-angular">Dependency Injection in Angular</h1>
+<h1 id="dependency-injection-in-c">Dependency Injection in C#</h1>
+<p>Dependency Injection is paired with abstraction. In C#, interfaces are used opposed to concrete classes in loosely coupling dependencies, making it easier for testing as mock objects implementing the interface can be used. For a backend (Enitity Framework Core) using the repository design pattern, we set up a repo service to pull the database context out of a user controller, and create an abstraction that would let us use a mock repo for testing if needed.</p>
+<h2 id="iuserrepo-and-its-implementation">IUserRepo and It&rsquo;s Implementation</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c#" data-lang="c#"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Microsoft.EntityFrameworkCore;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> CoYBackend.Models;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> CoYBackend.Services
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IUserRepo</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    Task&lt;User&gt; Get(<span style="color:#66d9ef">int</span> Id);
+</span></span><span style="display:flex;"><span>    Task&lt;IEnumerable&lt;User&gt;&gt; GetAll();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UserRepo</span> : IUserRepo
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> CoYBackendContext _context;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UserRepo(CoYBackendContext context)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      _context = context;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;IEnumerable&lt;User&gt;&gt; GetAll()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">await</span> _context.users.ToListAsync();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;User&gt; Get(<span style="color:#66d9ef">int</span> Id)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">await</span> _context.users.Include(i =&gt; i.Contributions).ThenInclude(c =&gt; c.ContributionType).FirstOrDefaultAsync(i =&gt; i.Id == Id);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>To set up a service, this line is added to the Program.cs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c#" data-lang="c#"><span style="display:flex;"><span>builder.Services.AddTransient&lt;IUserRepo, UserRepo&gt;();
+</span></span></code></pre></div><h2 id="user-controller-with-endpoints">User Controller with Endpoints</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c#" data-lang="c#"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Mvc;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> CoYBackend.Models;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> CoYBackend.Services;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> CoYBackend.Controllers
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">  [Route(&#34;api/[controller]</span><span style="color:#e6db74">&#34;)]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#a6e22e">  [ApiController]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UserController</span> : ControllerBase
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> ToDTO _toDTO;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> FromDTO _fromDTO;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IUserRepo _userRepo;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UserController(IUserRepo UserRepo)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      _userRepo = UserRepo;
+</span></span><span style="display:flex;"><span>      _toDTO = <span style="color:#66d9ef">new</span> ToDTO();
+</span></span><span style="display:flex;"><span>      _fromDTO = <span style="color:#66d9ef">new</span> FromDTO();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [HttpGet]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;ActionResult&lt;IEnumerable&lt;UserDTO&gt;&gt;&gt; GetAll()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> userList = <span style="color:#66d9ef">await</span> _userRepo.GetAll();
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> userDTOList = userList.Select(u =&gt; _toDTO.ToUserDTO(u)).ToList();
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> userDTOList;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [HttpGet(&#34;{Id}&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;ActionResult&lt;UserContDTO&gt;&gt; Get(<span style="color:#66d9ef">int</span> Id)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> user = <span style="color:#66d9ef">await</span> _userRepo.Get(Id);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (user == <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NotFound();
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> _toDTO.ToUserContDTO(user);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="dependency-injection-in-angular">Dependency Injection in Angular</h1>
 <p>For the free company website <a href="https://council-of-yggdrasil.company/home">council-of-yggdrasil.company</a>, the homepage contains a section that displays FFXIV news and maintenaince information using the Lodestone API. The model of the desired json response is defined in a lodestone.interface.ts.</p>
 <h2 id="lodestoneinterfacets">lodestone.interface.ts</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">LodestoneTopic</span> {
@@ -173,7 +251,25 @@
 </span></span><span style="display:flex;"><span>    ).<span style="color:#a6e22e">subscribe</span>(<span style="color:#a6e22e">lodestoneMaintenance</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lodestoneMaintenance</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lodestoneMaintenance</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div>
+</span></span></code></pre></div><h2 id="note-on-abstraction-in-typescript">Note on Abstraction in Typescript</h2>
+<p>One may have noticed that, in the Angular example, an interface was not defined for the injected LodestoneService. The service seemed have been injected as a concrete class opposed to how services are usually injected in C#. However, Typescript types are not concrete, and as long as a type follows the same structure as another type, that type will be accepted. Consider the example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LodestoneService</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">total</span>: <span style="color:#66d9ef">number</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LodestoneServiceMock</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">total</span>: <span style="color:#66d9ef">number</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">showTotal</span>(<span style="color:#a6e22e">obj</span>: <span style="color:#66d9ef">LodestoneService</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;total: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">obj</span>.<span style="color:#a6e22e">total</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">testObj</span>: <span style="color:#66d9ef">LodestoneServiceMock</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">total</span>: <span style="color:#66d9ef">5</span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">showTotal</span>(<span style="color:#a6e22e">testObj</span>); <span style="color:#75715e">// Would throw a compiler error in C#, works in typescript
+</span></span></span></code></pre></div><p>Because LodestoneServiceMock follows the same structure as LodestoneService, it is accepted as an input to function showTotal(obj: LodestoneService). This implies some existing abstraction Typescript has with its types that does not need to be defined explicitly as in C#.</p>
+
 </main>
 
   <footer>

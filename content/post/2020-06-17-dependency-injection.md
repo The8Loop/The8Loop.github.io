@@ -42,6 +42,95 @@ This is duplicative, and logistics is not trivial. The whole process of mail del
 
 All an entity needs to care about is its address or maybe address it wants to send something to, and what it wants to send or recieve. All concerns (playing into seperation of concerns here) of the process of delivery belong to the mail service.
 
+# Dependency Injection in C#
+
+Dependency Injection is paired with abstraction. In C#, interfaces are used opposed to concrete classes in loosely coupling dependencies, making it easier for testing as mock objects implementing the interface can be used. For a backend (Enitity Framework Core) using the repository design pattern, we set up a repo service to pull the database context out of a user controller, and create an abstraction that would let us use a mock repo for testing if needed.
+
+## IUserRepo and It's Implementation
+```c#
+using Microsoft.EntityFrameworkCore;
+using CoYBackend.Models;
+
+namespace CoYBackend.Services
+{
+  public interface IUserRepo
+  {
+    Task<User> Get(int Id);
+    Task<IEnumerable<User>> GetAll();
+  }
+
+  public class UserRepo : IUserRepo
+  {
+    private readonly CoYBackendContext _context;
+
+    public UserRepo(CoYBackendContext context)
+    {
+      _context = context;
+    }
+
+    public async Task<IEnumerable<User>> GetAll()
+    {
+      return await _context.users.ToListAsync();
+    }
+
+    public async Task<User> Get(int Id)
+    {
+      return await _context.users.Include(i => i.Contributions).ThenInclude(c => c.ContributionType).FirstOrDefaultAsync(i => i.Id == Id);
+    }
+  }
+}
+```
+
+To set up a service, this line is added to the Program.cs.
+```c#
+builder.Services.AddTransient<IUserRepo, UserRepo>();
+```
+
+## User Controller with Endpoints
+```c#
+using Microsoft.AspNetCore.Mvc;
+using CoYBackend.Models;
+using CoYBackend.Services;
+
+namespace CoYBackend.Controllers
+{
+  [Route("api/[controller]")]
+  [ApiController]
+  public class UserController : ControllerBase
+  {
+    private readonly ToDTO _toDTO;
+    private readonly FromDTO _fromDTO;
+    private readonly IUserRepo _userRepo;
+
+    public UserController(IUserRepo UserRepo)
+    {
+      _userRepo = UserRepo;
+      _toDTO = new ToDTO();
+      _fromDTO = new FromDTO();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
+    {
+      var userList = await _userRepo.GetAll();
+      var userDTOList = userList.Select(u => _toDTO.ToUserDTO(u)).ToList();
+      return userDTOList;
+    }
+
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<UserContDTO>> Get(int Id)
+    {
+      var user = await _userRepo.Get(Id);
+      if (user == null)
+      {
+        return NotFound();
+      }
+      return _toDTO.ToUserContDTO(user);
+    }
+  }
+}
+```
+
 # Dependency Injection in Angular
 
 For the free company website [council-of-yggdrasil.company](https://council-of-yggdrasil.company/home), the homepage contains a section that displays FFXIV news and maintenaince information using the Lodestone API. The model of the desired json response is defined in a lodestone.interface.ts.
@@ -146,3 +235,26 @@ export class HomeComponent implements OnInit {
   }
 }
 ```
+
+## Note on Abstraction in Typescript
+One may have noticed that, in the Angular example, an interface was not defined for the injected LodestoneService. The service seemed have been injected as a concrete class opposed to how services are usually injected in C#. However, Typescript types are not concrete, and as long as a type follows the same structure as another type, that type will be accepted. Consider the example:
+
+```ts
+class LodestoneService {
+  total: number;
+}
+
+class LodestoneServiceMock {
+  total: number;
+}
+
+function showTotal(obj: LodestoneService) {
+  console.log("total: " + obj.total);
+}
+
+const testObj: LodestoneServiceMock = { total: 5 };
+
+showTotal(testObj); // Would throw a compiler error in C#, works in typescript
+```
+
+Because LodestoneServiceMock follows the same structure as LodestoneService, it is accepted as an input to function showTotal(obj: LodestoneService). This implies some existing abstraction Typescript has with its types that does not need to be defined explicitly as in C#.
