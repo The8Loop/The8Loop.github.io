@@ -3,10 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://the8loop.github.io/</loc>
-    <lastmod>2022-07-07T14:42:27-05:00</lastmod>
+    <lastmod>2022-07-08T08:58:02-05:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/post/</loc>
-    <lastmod>2022-07-07T14:42:27-05:00</lastmod>
+    <lastmod>2022-07-08T08:58:02-05:00</lastmod>
+  </url><url>
+    <loc>https://the8loop.github.io/post/seperation-of-concern/</loc>
+    <lastmod>2022-07-08T08:58:02-05:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/post/sql-stored-procedures/</loc>
     <lastmod>2022-07-07T14:42:27-05:00</lastmod>

@@ -6,7 +6,16 @@
     <description>Recent content in Home on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Jul 2022 14:42:27 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Jul 2022 08:58:02 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Seperation of Concern</title>
+      <link>https://the8loop.github.io/post/seperation-of-concern/</link>
+      <pubDate>Fri, 08 Jul 2022 08:58:02 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/seperation-of-concern/</guid>
+      <description>Seperation of Concerns Following up on dependency injection and the use of the repository structure, a core principle of these approaches is seperation of concern. In building an application, it is a good practice to seperate the concerns, tasks, functionalities, between different classes and components. Angular supports the practice of seperation of concern very well with its component system. Not utilized, one may end up with very large page components that try to handle everything.</description>
+    </item>
+    
     <item>
       <title>SQL Stored Procedures</title>
       <link>https://the8loop.github.io/post/sql-stored-procedures/</link>
