@@ -6,7 +6,16 @@
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 17 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://the8loop.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Jul 2022 14:42:27 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SQL Stored Procedures</title>
+      <link>https://the8loop.github.io/post/sql-stored-procedures/</link>
+      <pubDate>Thu, 07 Jul 2022 14:42:27 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/sql-stored-procedures/</guid>
+      <description>SQL-Stored-Procedures The back-end for the Council of Yggdrasil website was written using .Net framework. When one uses such a framework to set up end points and communicate to a server, one likely uses Object-Relational Mapping (ORM). The .Net ORM used for Council of Yggdrasil is Entity Framework Core. An ORM allows one to make queries to a database using an object-oriented language versus, for example, SQL. While ORM comes with the advatange of writing in an OOP language and keeping query logic saved on the back-end level, complex queries are more efficiently done in the database side using stored procedures, an executable routine written in the database language (SQL).</description>
+    </item>
+    
     <item>
       <title>Dependency Injection</title>
       <link>https://the8loop.github.io/post/2020-06-17-dependency-injection/</link>

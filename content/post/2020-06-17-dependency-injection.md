@@ -1,6 +1,6 @@
 ---
 title: "Dependency Injection"
-author: Eric Luper
+author: E.S. Luper
 date: '2022-06-17'
 draft: false
 ---

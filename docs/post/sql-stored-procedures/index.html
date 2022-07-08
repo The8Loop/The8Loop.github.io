@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQL Stored Procedures | My New Hugo Site</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">SQL Stored Procedures</span></h1>
+<h2 class="author">E.S. Luper</h2>
+<h2 class="date">2022/07/07</h2>
+</div>
+
+<main>
+<h1 id="sql-stored-procedures">SQL-Stored-Procedures</h1>
+<p>The back-end for the Council of Yggdrasil website was written using .Net framework. When one uses such a framework to set up end points and communicate to a server, one likely uses Object-Relational Mapping (ORM). The .Net ORM used for Council of Yggdrasil is Entity Framework Core. An ORM allows one to make queries to a database using an object-oriented language versus, for example, SQL. While ORM comes with the advatange of writing in an OOP language and keeping query logic saved on the back-end level, complex queries are more efficiently done in the database side using stored procedures, an executable routine written in the database language (SQL). This also has the advantage of maintainability. If the ORM or back-end framework are changed, the complex procedures are safe from needing to be rewritten or transfered, as SQL isn&rsquo;t going anywhere. SQL&rsquo;s universality also keeps it independent from a developer&rsquo;s choice or understanding of a specific OOP language, making it more accessible.</p>
+<p>An example of the use of a stored-procedure for Council of Yggdrasil is in a leaderboard of top contributors. The database includes a User, and a Money table, and may contain the following entries:</p>
+<p>User:</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Name</th>
+<th>IsActive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Thorak Icestorm</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sonata Icestorm</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Zia Mordrem</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kyler Blint</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Money:</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Contribution</th>
+<th>Date</th>
+<th>ContributionTypeId</th>
+<th>UserId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>250</td>
+<td>2022-07-07</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>-100</td>
+<td>2022-07-07</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>-50</td>
+<td>2022-07-07</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>-100</td>
+<td>2022-07-07</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr>
+<td>5</td>
+<td>150</td>
+<td>2022-07-07</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>-30</td>
+<td>2022-07-07</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>7</td>
+<td>10</td>
+<td>2022-07-07</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>10</td>
+<td>2022-07-07</td>
+<td>2</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><br>
+A stored procedure can be written to handle the joining of these tables by the user id, considering only personal contributions and withdrawals, and grouping the entries by user id while summing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DEFINER</span><span style="color:#f92672">=`</span>root<span style="color:#f92672">`@`</span>localhost<span style="color:#f92672">`</span> <span style="color:#66d9ef">PROCEDURE</span> <span style="color:#f92672">`</span>Leaderboard<span style="color:#f92672">`</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">BEGIN</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">SUM</span>(money.Contribution) total,
+</span></span><span style="display:flex;"><span>    users.Name
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> 
+</span></span><span style="display:flex;"><span>	money
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INNER</span> <span style="color:#66d9ef">JOIN</span> 
+</span></span><span style="display:flex;"><span>	users 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">ON</span> users.Id <span style="color:#f92672">=</span> money.UserId
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> 
+</span></span><span style="display:flex;"><span>	(ContributionTypeId <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> 
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">OR</span> ContributionTypeId <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> UserId
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">HAVING</span> total <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">LIMIT</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">END</span>
+</span></span></code></pre></div><p>Resulting Table:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thorak Icestorm</td>
+<td>250</td>
+</tr>
+<tr>
+<td>Sonata Icestorm</td>
+<td>150</td>
+</tr>
+</tbody>
+</table>
+<p>To call the stored procedure in .Net</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C#" data-lang="C#"><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> IEnumerable&lt;Leaderboard&gt; GetLeaderboard()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> _context.Set&lt;Leaderboard&gt;().FromSqlRaw(<span style="color:#e6db74">$&#34;CALL Leaderboard();&#34;</span>).ToList();
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div>
+</main>
+
+  <footer>
+  
+  
+  </footer>
+  </body>
+</html>
+
