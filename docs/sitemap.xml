@@ -2,11 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://the8loop.github.io/post/cooking-passwords/</loc>
+    <lastmod>2022-07-18T08:53:14-05:00</lastmod>
+  </url><url>
     <loc>https://the8loop.github.io/</loc>
-    <lastmod>2022-07-08T08:58:02-05:00</lastmod>
+    <lastmod>2022-07-18T08:53:14-05:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/post/</loc>
-    <lastmod>2022-07-08T08:58:02-05:00</lastmod>
+    <lastmod>2022-07-18T08:53:14-05:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/post/seperation-of-concern/</loc>
     <lastmod>2022-07-08T08:58:02-05:00</lastmod>

@@ -6,7 +6,16 @@
     <description>Recent content in Home on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Jul 2022 08:58:02 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Jul 2022 08:53:14 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cooking Passwords: Hashing and Salting</title>
+      <link>https://the8loop.github.io/post/cooking-passwords/</link>
+      <pubDate>Mon, 18 Jul 2022 08:53:14 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/cooking-passwords/</guid>
+      <description>Cooking Passwords: Hashing and Salting Why Cook Passwords Sometimes, passwords get leaked. In 2020, Instagram suffered a databreach that leaked thousands of passwords in plain text. While it is often said that users have a responsibiliy to maintain password security (long, complicated passwords, regularly updated, unshared, not duplicated, etc.), services also have a responsibility towards their users to store their passwords in a secure manner. Plain text is not secure. Sometimes, passwords get leaked, and when the saved format is raw plain text, that&amp;rsquo;s it.</description>
+    </item>
+    
     <item>
       <title>Seperation of Concern</title>
       <link>https://the8loop.github.io/post/seperation-of-concern/</link>
