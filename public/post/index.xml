@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on A minimal Hugo website</title>
+    <link>https://the8loop.github.io/post/</link>
+    <description>Recent content in Posts on A minimal Hugo website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 18 Jul 2022 08:53:14 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cooking Passwords: Hashing and Salting</title>
+      <link>https://the8loop.github.io/post/2022/07/18/cooking-passwords-hashing-and-salting/</link>
+      <pubDate>Mon, 18 Jul 2022 08:53:14 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/2022/07/18/cooking-passwords-hashing-and-salting/</guid>
+      <description>Cooking Passwords: Hashing and Salting Why Cook Passwords Sometimes, passwords get leaked. In 2020, Instagram suffered a databreach that leaked thousands of passwords in plain text. While it is often said that users have a responsibiliy to maintain password security (long, complicated passwords, regularly updated, unshared, not duplicated, etc.), services also have a responsibility towards their users to store their passwords in a secure manner. Plain text is not secure. Sometimes, passwords get leaked, and when the saved format is raw plain text, that&amp;rsquo;s it.</description>
+    </item>
+    
+    <item>
+      <title>Seperation of Concern</title>
+      <link>https://the8loop.github.io/post/2022/07/08/seperation-of-concern/</link>
+      <pubDate>Fri, 08 Jul 2022 08:58:02 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/2022/07/08/seperation-of-concern/</guid>
+      <description>Seperation of Concerns Following up on dependency injection and the use of the repository structure, a core principle of these approaches is seperation of concern. In building an application, it is a good practice to seperate the concerns, tasks, functionalities, between different classes and components. Angular supports the practice of seperation of concern very well with its component system. Not utilized, one may end up with very large page components that try to handle everything.</description>
+    </item>
+    
+    <item>
+      <title>SQL Stored Procedures</title>
+      <link>https://the8loop.github.io/post/2022/07/07/sql-stored-procedures/</link>
+      <pubDate>Thu, 07 Jul 2022 14:42:27 -0500</pubDate>
+      
+      <guid>https://the8loop.github.io/post/2022/07/07/sql-stored-procedures/</guid>
+      <description>SQL-Stored-Procedures The back-end for the Council of Yggdrasil website was written using .Net framework. When one uses such a framework to set up end points and communicate to a server, one likely uses Object-Relational Mapping (ORM). The .Net ORM used for Council of Yggdrasil is Entity Framework Core. An ORM allows one to make queries to a database using an object-oriented language versus, for example, SQL. While ORM comes with the advatange of writing in an OOP language and keeping query logic saved on the back-end level, complex queries are more efficiently done in the database side using stored procedures, an executable routine written in the database language (SQL).</description>
+    </item>
+    
+    <item>
+      <title>Dependency Injection</title>
+      <link>https://the8loop.github.io/post/2022/06/17/dependency-injection/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://the8loop.github.io/post/2022/06/17/dependency-injection/</guid>
+      <description>A Brief on Dependency Injection Dependency Injection, also known as Inversion of Control, is a design pattern used to loosely couple dependent objects. It makes the fifth principle of the SOLID design principles.
+SOLID:
+S : Single-responsiblity Principle O : Open-closed Principle L : Liskov Substitution Principle I : Interface Segregation Principle D : Dependency Inversion Principle Considering web development and the practice of dependency injection when handling objects making http requests, an example of the code simplification of dependency injection can be given by considering entities with mail services.</description>
+    </item>
+    
+  </channel>
+</rss>

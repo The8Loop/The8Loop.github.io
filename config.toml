@@ -1,5 +1,0 @@
-baseURL = 'https://the8loop.github.io/'
-languageCode = 'en-us'
-title = 'DevBlog | E.S. Luper'
-publishdir = '/docs'
-theme = ['XMin']

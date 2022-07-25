@@ -1,0 +1,32 @@
+baseurl: "https://the8loop.github.io/"
+languageCode: "en-us"
+title: "A minimal Hugo website"
+theme: "Xmin"
+googleAnalytics: ""
+disqusShortname: ""
+ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
+footnotereturnlinkcontents: "↩"
+
+permalinks:
+  note: "/note/:year/:month/:day/:slug/"
+  post: "/post/:year/:month/:day/:slug/"
+
+menu:
+  main:
+    - name: Home
+      url: ""
+      weight: 1
+    - name: Resume
+      url: "Resume.pdf"
+      weight: 2
+
+params:
+  description: "A website built through Hugo and blogdown."
+  footer: "&copy; E.S. Luper 2022 -- {Year} | [Github](https://github.com/The8Loop)"
+
+markup:
+  highlight:
+    codeFences: false
+  goldmark:
+    renderer:
+      unsafe: true

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Seperation of Concern | A minimal Hugo website</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Seperation of Concern</span></h1>
+<h2 class="author">E.S. Luper</h2>
+<h2 class="date">2022/07/08</h2>
+</div>
+
+<main>
+<h1 id="seperation-of-concerns">Seperation of Concerns</h1>
+<p>Following up on dependency injection and the use of the repository structure, a core principle of these approaches is seperation of concern. In building an application, it is a good practice to seperate the concerns, tasks, functionalities, between different classes and components. Angular supports the practice of seperation of concern very well with its component system. Not utilized, one may end up with very large page components that try to handle everything. For maintainibility, and reuse of repeated features, it becomes clear that things should be broken down into smaller components. In web development, and very well in other fields of software development, testing is of large interest. Seperating tasks into specific components increases testability.</p>
+<p>When first learning to build a controller in .Net, one handles database access via the controller. With the repository structure, the concern of database access is seperated from the controller. Likewise, the repository should only be dealing with direct domain objects, and DTO mapping will be handled by a seperate class.</p>
+<h2 id="iuserrepo-and-its-implementation">IUserRepo and It&rsquo;s Implementation</h2>
+<pre><code class="language-c#">using Microsoft.EntityFrameworkCore;
+using CoYBackend.Models;
+
+namespace CoYBackend.Services
+{
+  public interface IUserRepo
+  {
+    Task&lt;User&gt; Get(int Id);
+    Task&lt;IEnumerable&lt;User&gt;&gt; GetAll();
+  }
+
+  public class UserRepo : IUserRepo
+  {
+    private readonly CoYBackendContext _context;
+
+    public UserRepo(CoYBackendContext context)
+    {
+      _context = context;
+    }
+
+    public async Task&lt;IEnumerable&lt;User&gt;&gt; GetAll()
+    {
+      return await _context.users.ToListAsync();
+    }
+  }
+}
+</code></pre>
+<h2 id="user-controller-with-endpoints">User Controller with Endpoints</h2>
+<pre><code class="language-c#">using Microsoft.AspNetCore.Mvc;
+using CoYBackend.Models;
+using CoYBackend.Services;
+
+namespace CoYBackend.Controllers
+{
+  [Route(&quot;api/[controller]&quot;)]
+  [ApiController]
+  public class UserController : ControllerBase
+  {
+    private readonly ToDTO _toDTO;
+    private readonly IUserRepo _userRepo;
+
+    public UserController(IUserRepo UserRepo)
+    {
+      _userRepo = UserRepo;
+      _toDTO = new ToDTO();
+    }
+
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;IEnumerable&lt;UserDTO&gt;&gt;&gt; GetAll()
+    {
+      var userList = await _userRepo.GetAll();
+      var userDTOList = userList.Select(u =&gt; _toDTO.ToUserDTO(u)).ToList();
+      return userDTOList;
+    }
+  }
+}
+</code></pre>
+<h2 id="to-dto-mapping">To DTO Mapping</h2>
+<pre><code class="language-c#">using CoYBackend.Models;
+
+namespace CoYBackend.Services
+{
+  public class ToDTO
+  {
+    public UserDTO ToUserDTO(User u)
+    {
+      var userDTO = new UserDTO()
+      {
+        Id = u.Id,
+        Name = u.Name,
+        IsActive = u.IsActive
+      };
+      return userDTO;
+    }
+  }
+}
+</code></pre>
+<p><br>
+By seperating the DTO mapping into a class, it is made reusable and keeps mapping logic in one place. By pulling out the database context from the controller into a repository object, testing of the controller is made possible since a mock repository supplying mock domain objects can be injected into the controller in place of the real repository.</p>
+
+</main>
+
+  <footer>
+  
+  
+  <hr/>
+  © <a href="https://yihui.org">Yihui Xie</a> 2017 &ndash; 2022 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

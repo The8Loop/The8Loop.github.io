@@ -1,15 +1,20 @@
 ---
 title: Home
 ---
-
-[<img src="https://simpleicons.org/icons/github.svg" style="max-width:15%;min-width:40px;float:right;" alt="Github repo" />](https://github.com/yihui/hugo-xmin)
-
+<!-- [<img src="https://simpleicons.org/icons/github.svg" style="max-width:15%;min-width:40px;float:right;" alt="Github repo" />](https://github.com/yihui/hugo-xmin) -->
 # DevBlog
 
 ## Sites
-[council-of-yggdrasil.company](https://council-of-yggdrasil.company/home)
+### [council-of-yggdrasil.company](https://council-of-yggdrasil.company/home)
+- HTML/CSS
+- Typescript
+- Angular
+- ASP.NET
+- MySQL
 
-[honeybeeandfriends.buzz](https://honeybeeandfriends.buzz/)
+### [honeybeeandfriends.buzz](https://honeybeeandfriends.buzz/)
+- HTML/CSS
+- Javascript
 
 ## Posts
 
