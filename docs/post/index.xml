@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on My New Hugo Site</title>
+    <title>Posts on DevBlog | E.S. Luper</title>
     <link>https://the8loop.github.io/post/</link>
-    <description>Recent content in Posts on My New Hugo Site</description>
+    <description>Recent content in Posts on DevBlog | E.S. Luper</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 18 Jul 2022 08:53:14 -0500</lastBuildDate><atom:link href="https://the8loop.github.io/post/index.xml" rel="self" type="application/rss+xml" />
