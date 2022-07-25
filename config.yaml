@@ -1,6 +1,6 @@
 baseurl: "https://the8loop.github.io/"
 languageCode: "en-us"
-title: "A minimal Hugo website"
+title: "DevBlog | E.S. Luper"
 theme: "Xmin"
 googleAnalytics: ""
 disqusShortname: ""
