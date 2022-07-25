@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://the8loop.github.io/post/cooking-passwords/</loc>
+    <loc>https://the8loop.github.io/post/2022/07/18/cooking-passwords-hashing-and-salting/</loc>
     <lastmod>2022-07-18T08:53:14-05:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/</loc>
@@ -11,13 +11,13 @@
     <loc>https://the8loop.github.io/post/</loc>
     <lastmod>2022-07-18T08:53:14-05:00</lastmod>
   </url><url>
-    <loc>https://the8loop.github.io/post/seperation-of-concern/</loc>
+    <loc>https://the8loop.github.io/post/2022/07/08/seperation-of-concern/</loc>
     <lastmod>2022-07-08T08:58:02-05:00</lastmod>
   </url><url>
-    <loc>https://the8loop.github.io/post/sql-stored-procedures/</loc>
+    <loc>https://the8loop.github.io/post/2022/07/07/sql-stored-procedures/</loc>
     <lastmod>2022-07-07T14:42:27-05:00</lastmod>
   </url><url>
-    <loc>https://the8loop.github.io/post/2020-06-17-dependency-injection/</loc>
+    <loc>https://the8loop.github.io/post/2022/06/17/dependency-injection/</loc>
     <lastmod>2022-06-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://the8loop.github.io/about/</loc>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dependency Injection | A minimal Hugo website</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/Resume.pdf">Resume</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Dependency Injection</span></h1>
+<h2 class="author">E.S. Luper</h2>
+<h2 class="date">2022/06/17</h2>
+</div>
+
+<main>
+<h1 id="a-brief-on-dependency-injection">A Brief on Dependency Injection</h1>
+<p>Dependency Injection, also known as Inversion of Control, is a design pattern used to loosely couple dependent objects. It makes the fifth principle of the SOLID design principles.</p>
+<p>SOLID:</p>
+<ul>
+<li>S : Single-responsiblity Principle</li>
+<li>O : Open-closed Principle</li>
+<li>L : Liskov Substitution Principle</li>
+<li>I : Interface Segregation Principle</li>
+<li>D : Dependency Inversion Principle</li>
+</ul>
+<p>Considering web development and the practice of dependency injection when handling objects making http requests, an example of the code simplification of dependency injection can be given by considering entities with mail services.</p>
+<p>Different entities may be defined with the ability to send or recieve mail to or from some outside source. We may have something large and complicated, like a business, with the ability to send and recieve mail, or define individual people or households. We could define the logic for handling and recieving mail within each entitiy.</p>
+<ul>
+<li>Business
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>Household
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>Person
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+</ul>
+<p>This is duplicative, and logistics is not trivial. The whole process of mail delivery will have to be described for each entity. If a change is made (maybe persons and households have upgraded from carrier pidgeons to vehicle delivery), it will have to be made for multiple entities. One solution may be inheritance, however the aim is loose coupling and reuse. Realistically, persons and households, and maybe even businesses, do not really care what is involved in the process of delivery. Just that things are delivered. The dependency injection solution would be to create a service. A mail delivery service.</p>
+<ul>
+<li>
+<p>Mail Delivery Service</p>
+<ul>
+<li>Logic for sending requests</li>
+</ul>
+</li>
+<li>
+<p>Business</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+<li>
+<p>Household</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+<li>
+<p>Person</p>
+<ul>
+<li>Passes address and request to mail delivery service.</li>
+</ul>
+</li>
+</ul>
+<p>All an entity needs to care about is its address or maybe address it wants to send something to, and what it wants to send or recieve. All concerns (playing into seperation of concerns here) of the process of delivery belong to the mail service.</p>
+<h1 id="dependency-injection-in-c">Dependency Injection in C#</h1>
+<p>Dependency Injection is paired with abstraction. In C#, interfaces are used opposed to concrete classes in loosely coupling dependencies, making it easier for testing as mock objects implementing the interface can be used. For a backend (Enitity Framework Core) using the repository design pattern, we set up a repo service to pull the database context out of a user controller, and create an abstraction that would let us use a mock repo for testing if needed.</p>
+<h2 id="iuserrepo-and-its-implementation">IUserRepo and It&rsquo;s Implementation</h2>
+<pre><code class="language-c#">using Microsoft.EntityFrameworkCore;
+using CoYBackend.Models;
+
+namespace CoYBackend.Services
+{
+  public interface IUserRepo
+  {
+    Task&lt;User&gt; Get(int Id);
+    Task&lt;IEnumerable&lt;User&gt;&gt; GetAll();
+  }
+
+  public class UserRepo : IUserRepo
+  {
+    private readonly CoYBackendContext _context;
+
+    public UserRepo(CoYBackendContext context)
+    {
+      _context = context;
+    }
+
+    public async Task&lt;IEnumerable&lt;User&gt;&gt; GetAll()
+    {
+      return await _context.users.ToListAsync();
+    }
+
+    public async Task&lt;User&gt; Get(int Id)
+    {
+      return await _context.users.Include(i =&gt; i.Contributions).ThenInclude(c =&gt; c.ContributionType).FirstOrDefaultAsync(i =&gt; i.Id == Id);
+    }
+  }
+}
+</code></pre>
+<p>To set up a service, this line is added to the Program.cs.</p>
+<pre><code class="language-c#">builder.Services.AddTransient&lt;IUserRepo, UserRepo&gt;();
+</code></pre>
+<h2 id="user-controller-with-endpoints">User Controller with Endpoints</h2>
+<pre><code class="language-c#">using Microsoft.AspNetCore.Mvc;
+using CoYBackend.Models;
+using CoYBackend.Services;
+
+namespace CoYBackend.Controllers
+{
+  [Route(&quot;api/[controller]&quot;)]
+  [ApiController]
+  public class UserController : ControllerBase
+  {
+    private readonly ToDTO _toDTO;
+    private readonly FromDTO _fromDTO;
+    private readonly IUserRepo _userRepo;
+
+    public UserController(IUserRepo UserRepo)
+    {
+      _userRepo = UserRepo;
+      _toDTO = new ToDTO();
+      _fromDTO = new FromDTO();
+    }
+
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;IEnumerable&lt;UserDTO&gt;&gt;&gt; GetAll()
+    {
+      var userList = await _userRepo.GetAll();
+      var userDTOList = userList.Select(u =&gt; _toDTO.ToUserDTO(u)).ToList();
+      return userDTOList;
+    }
+
+    [HttpGet(&quot;{Id}&quot;)]
+    public async Task&lt;ActionResult&lt;UserContDTO&gt;&gt; Get(int Id)
+    {
+      var user = await _userRepo.Get(Id);
+      if (user == null)
+      {
+        return NotFound();
+      }
+      return _toDTO.ToUserContDTO(user);
+    }
+  }
+}
+</code></pre>
+<h1 id="dependency-injection-in-angular">Dependency Injection in Angular</h1>
+<p>For the free company website <a href="https://council-of-yggdrasil.company/home">council-of-yggdrasil.company</a>, the homepage contains a section that displays FFXIV news and maintenaince information using the Lodestone API. The model of the desired json response is defined in a lodestone.interface.ts.</p>
+<h2 id="lodestoneinterfacets">lodestone.interface.ts</h2>
+<pre><code class="language-ts">export interface LodestoneTopic {
+    url: string;
+    time: string;
+    image: string;
+    description: string;
+}
+
+export interface Companion {
+    url: string;
+    title: string;
+    start: string;
+    end: string;
+    current: boolean;
+}
+
+export interface LodestoneMaintenance {
+    companion: Companion[];
+}
+</code></pre>
+<p>A service dependent on this model is created to provide methods for making http requests. This is done in lodestone.service.ts. Notice that this service is further dependent on HttpClient. Dependency injection allows the service to focus cleanly on just defining Get methods.</p>
+<h2 id="lodestoneservicets">lodestone.service.ts</h2>
+<pre><code class="language-ts">import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LodestoneMaintenance, LodestoneTopic } from '../model/lodestone.interface';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LodestoneService {
+
+  constructor(private http: HttpClient) { }
+
+  /**
+   * news/topics Get request that retrieves a list of current topics.
+   * @returns An observable of topics.
+   */
+  getTopics(): Observable&lt;LodestoneTopic[]&gt; {
+    return this.http.get&lt;LodestoneTopic[]&gt;(`${environment.lodestoneUrl}/topics`);
+  }
+
+  /**
+   * news/maintenance/current Get request that retrieves a list of current topics.
+   * @returns An observable of current maintenance.
+   */
+  getMaintenance(): Observable&lt;LodestoneMaintenance&gt; {
+    return this.http.get&lt;LodestoneMaintenance&gt;(`${environment.lodestoneUrl}/maintenance/current`);
+  }
+}
+</code></pre>
+<p>The Home Component injects the lodestone dependency, allowing it to make requests for Lodestone information. Should other components need to make requests, this dependency could be injected to them as well. Should changes need to be made, such as the endpoint, this can be done in the single service itself. Should the json response be changed, just the model needs to be updated. This is the advantage of seperation of concerns.</p>
+<h2 id="homecomponentts">home.component.ts</h2>
+<pre><code class="language-ts">import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs';
+import { LodestoneMaintenance, LodestoneTopic } from 'src/app/model/lodestone.interface';
+import { LodestoneService } from 'src/app/services/lodestone.service';
+
+@Component({
+  selector: 'coy-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
+})
+export class HomeComponent implements OnInit {
+
+  lodestoneTopics: LodestoneTopic[] = [];
+
+  lodestoneMaintenance: LodestoneMaintenance = {
+    companion: []
+  };
+
+  constructor(private lodestoneService: LodestoneService) { }
+
+  ngOnInit(): void {
+    this.lodestoneService.getTopics().pipe(
+      map(e =&gt; {
+        e = e.splice(0, 3);
+        e.forEach(e =&gt; e.time = (new Date(e.time)).toString());
+        return e;
+      }))
+      .subscribe(lodestoneTopics =&gt; this.lodestoneTopics = lodestoneTopics);
+
+    this.lodestoneService.getMaintenance().pipe(
+      map(e =&gt; {
+        e.companion[0].start = new Date(e.companion[0].start).toString();
+        e.companion[0].end = new Date(e.companion[0].end).toString();
+        return e;
+      })
+    ).subscribe(lodestoneMaintenance =&gt; this.lodestoneMaintenance = lodestoneMaintenance);
+  }
+}
+</code></pre>
+<h2 id="note-on-abstraction-in-typescript">Note on Abstraction in Typescript</h2>
+<p>One may have noticed that, in the Angular example, an interface was not defined for the injected LodestoneService. The service seemed have been injected as a concrete class opposed to how services are usually injected in C#. However, Typescript types are not concrete, and as long as a type follows the same structure as another type, that type will be accepted. Consider the example:</p>
+<pre><code class="language-ts">class LodestoneService {
+  total: number;
+}
+
+class LodestoneServiceMock {
+  total: number;
+}
+
+function showTotal(obj: LodestoneService) {
+  console.log(&quot;total: &quot; + obj.total);
+}
+
+const testObj: LodestoneServiceMock = { total: 5 };
+
+showTotal(testObj); // Would throw a compiler error in C#, works in typescript
+</code></pre>
+<p>Because LodestoneServiceMock follows the same structure as LodestoneService, it is accepted as an input to function showTotal(obj: LodestoneService). This implies some existing abstraction Typescript has with its types that does not need to be defined explicitly as in C#.</p>
+
+</main>
+
+  <footer>
+  
+  
+  <hr/>
+  © E.S. Luper 2022 &ndash; 2022 | <a href="https://github.com/The8Loop">Github</a>
+  
+  </footer>
+  </body>
+</html>
+

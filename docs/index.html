@@ -4,7 +4,7 @@
 	<meta name="generator" content="Hugo 0.101.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home | DevBlog | E.S. Luper</title>
+    <title>Home | A minimal Hugo website</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
@@ -14,6 +14,10 @@
     <nav>
     <ul class="menu">
       
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/Resume.pdf">Resume</a></li>
+      
     </ul>
     <hr/>
     </nav>
@@ -21,14 +25,53 @@
 
 
 
-<p><a href="https://github.com/yihui/hugo-xmin"><!-- raw HTML omitted --></a></p>
+<!-- [<img src="https://simpleicons.org/icons/github.svg" style="max-width:15%;min-width:40px;float:right;" alt="Github repo" />](https://github.com/yihui/hugo-xmin) -->
 <h1 id="devblog">DevBlog</h1>
 <h2 id="sites">Sites</h2>
-<p><a href="https://council-of-yggdrasil.company/home">council-of-yggdrasil.company</a></p>
-<p><a href="https://honeybeeandfriends.buzz/">honeybeeandfriends.buzz</a></p>
+<h3 id="council-of-yggdrasilcompanyhttpscouncil-of-yggdrasilcompanyhome"><a href="https://council-of-yggdrasil.company/home">council-of-yggdrasil.company</a></h3>
+<ul>
+<li>HTML/CSS</li>
+<li>Typescript</li>
+<li>Angular</li>
+<li>ASP.NET</li>
+<li>MySQL</li>
+</ul>
+<h3 id="honeybeeandfriendsbuzzhttpshoneybeeandfriendsbuzz"><a href="https://honeybeeandfriends.buzz/">honeybeeandfriends.buzz</a></h3>
+<ul>
+<li>HTML/CSS</li>
+<li>Javascript</li>
+</ul>
 <h2 id="posts">Posts</h2>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<!-- ## _Keep it simple, but not simpler_
+
+**XMin** is a Hugo theme written by [Yihui Xie](https://yihui.org) in about four hours: half an hour was spent on the Hugo templates, and 3.5 hours were spent on styling. The main motivation for writing this theme was to provide a really minimal example to beginners of Hugo templates. This XMin theme contains about 130 lines of code in total, including the code in HTML templates and CSS (also counting empty lines).
+
+
+```bash
+find . -not -path '*/exampleSite/*' \( -name '*.html' -o -name '*.css' \) | xargs wc -l
+```
+
+```
+       5 ./layouts/404.html
+      12 ./layouts/_default/single.html
+      20 ./layouts/_default/list.html
+      13 ./layouts/_default/terms.html
+       0 ./layouts/partials/foot_custom.html
+       0 ./layouts/partials/head_custom.html
+       9 ./layouts/partials/footer.html
+      20 ./layouts/partials/header.html
+      51 ./static/css/style.css
+       7 ./static/css/fonts.css
+     137 total
+```
+
+I can certainly further reduce the code, for example, by eliminating the CSS, but I believe a tiny bit of CSS can greatly improve readability. You cannot really find many CSS frameworks that only contain 50 lines of code.
+
+Although it is a minimal theme, it is actually fully functional. It supports pages (including the home page), blog posts, a navigation menu, categories, tags, and RSS. With [a little bit customization](https://github.com/yihui/hugo-xmin/blob/master/exampleSite/layouts/partials/foot_custom.html), it can easily support LaTeX math expressions, e.g.,
+
+`$${\sqrt {n}}\left(\left({\frac {1}{n}}\sum _{i=1}^{n}X_{i}\right)-\mu \right)\ {\xrightarrow {d}}\ N\left(0,\sigma ^{2}\right)$$`
+
+All pages not under the root directory of the website are listed below. You can also visit the list page of a single section, e.g., [posts](/post/), or [notes](/note/). See the [About](/about/) page for the usage of this theme. -->
 
 
 <ul>
@@ -37,28 +80,31 @@
   
   <li>
     <span class="date">2022/07/18</span>
-    <a href="/post/cooking-passwords/">Cooking Passwords: Hashing and Salting</a>
+    <a href="/post/2022/07/18/cooking-passwords-hashing-and-salting/">Cooking Passwords: Hashing and Salting</a>
   </li>
   
   <li>
     <span class="date">2022/07/08</span>
-    <a href="/post/seperation-of-concern/">Seperation of Concern</a>
+    <a href="/post/2022/07/08/seperation-of-concern/">Seperation of Concern</a>
   </li>
   
   <li>
     <span class="date">2022/07/07</span>
-    <a href="/post/sql-stored-procedures/">SQL Stored Procedures</a>
+    <a href="/post/2022/07/07/sql-stored-procedures/">SQL Stored Procedures</a>
   </li>
   
   <li>
     <span class="date">2022/06/17</span>
-    <a href="/post/2020-06-17-dependency-injection/">Dependency Injection</a>
+    <a href="/post/2022/06/17/dependency-injection/">Dependency Injection</a>
   </li>
   
 </ul>
 
   <footer>
   
+  
+  <hr/>
+  © E.S. Luper 2022 &ndash; 2022 | <a href="https://github.com/The8Loop">Github</a>
   
   </footer>
   </body>

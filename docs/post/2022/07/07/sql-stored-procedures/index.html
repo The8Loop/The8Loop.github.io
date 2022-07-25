@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SQL Stored Procedures | DevBlog | E.S. Luper</title>
+    <title>SQL Stored Procedures | A minimal Hugo website</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
@@ -12,6 +12,10 @@
   <body>
     <nav>
     <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/Resume.pdf">Resume</a></li>
       
     </ul>
     <hr/>
@@ -131,24 +135,25 @@
 </table>
 <p><br>
 A stored procedure can be written to handle the joining of these tables by the user id, considering only personal contributions and withdrawals, and grouping the entries by user id while summing.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DEFINER</span><span style="color:#f92672">=`</span>root<span style="color:#f92672">`@`</span>localhost<span style="color:#f92672">`</span> <span style="color:#66d9ef">PROCEDURE</span> <span style="color:#f92672">`</span>Leaderboard<span style="color:#f92672">`</span>()
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">BEGIN</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">SUM</span>(money.Contribution) total,
-</span></span><span style="display:flex;"><span>    users.Name
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> 
-</span></span><span style="display:flex;"><span>	money
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INNER</span> <span style="color:#66d9ef">JOIN</span> 
-</span></span><span style="display:flex;"><span>	users 
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">ON</span> users.Id <span style="color:#f92672">=</span> money.UserId
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> 
-</span></span><span style="display:flex;"><span>	(ContributionTypeId <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> 
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">OR</span> ContributionTypeId <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> UserId
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">HAVING</span> total <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">LIMIT</span> <span style="color:#ae81ff">3</span>;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">END</span>
-</span></span></code></pre></div><p>Resulting Table:</p>
+<pre><code class="language-sql">CREATE DEFINER=`root`@`localhost` PROCEDURE `Leaderboard`()
+BEGIN
+SELECT 
+	SUM(money.Contribution) total,
+    users.Name
+FROM 
+	money
+INNER JOIN 
+	users 
+    ON users.Id = money.UserId
+WHERE 
+	(ContributionTypeId = 1 
+	OR ContributionTypeId = 3)
+GROUP BY UserId
+HAVING total &gt; 0
+LIMIT 3;
+END
+</code></pre>
+<p>Resulting Table:</p>
 <table>
 <thead>
 <tr>
@@ -168,15 +173,19 @@ A stored procedure can be written to handle the joining of these tables by the u
 </tbody>
 </table>
 <p>To call the stored procedure in .Net</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C#" data-lang="C#"><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> IEnumerable&lt;Leaderboard&gt; GetLeaderboard()
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> _context.Set&lt;Leaderboard&gt;().FromSqlRaw(<span style="color:#e6db74">$&#34;CALL Leaderboard();&#34;</span>).ToList();
-</span></span><span style="display:flex;"><span>    }
-</span></span></code></pre></div>
+<pre><code class="language-C#">	public IEnumerable&lt;Leaderboard&gt; GetLeaderboard()
+    {
+      return _context.Set&lt;Leaderboard&gt;().FromSqlRaw($&quot;CALL Leaderboard();&quot;).ToList();
+    }
+</code></pre>
+
 </main>
 
   <footer>
   
+  
+  <hr/>
+  © E.S. Luper 2022 &ndash; 2022 | <a href="https://github.com/The8Loop">Github</a>
   
   </footer>
   </body>
